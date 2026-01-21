@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import yaml from 'js-yaml'
 import Button from '../ui/Button'
 
 const EXAMPLE_JSON = `{
@@ -13,6 +14,41 @@ const EXAMPLE_JSON = `{
 
 const EXAMPLE_SCHEMA = `{
   "openapi": "3.0.0",
+  "info": {
+    "title": "Product API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/products": {
+      "post": {
+        "operationId": "createProduct",
+        "summary": "Create a new product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "listProducts",
+        "summary": "List all products"
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "operationId": "getProduct",
+        "summary": "Get a product by ID"
+      },
+      "put": {
+        "operationId": "updateProduct",
+        "summary": "Update a product"
+      }
+    }
+  },
   "components": {
     "schemas": {
       "Product": {
@@ -42,22 +78,100 @@ const EXAMPLE_SCHEMA = `{
   }
 }`
 
+// Parse schema text as JSON or YAML
+function parseSchema(schemaText) {
+  const trimmed = schemaText.trim()
+
+  // Try JSON first
+  if (trimmed.startsWith('{')) {
+    try {
+      return JSON.parse(trimmed)
+    } catch {
+      // Fall through to YAML
+    }
+  }
+
+  // Try YAML
+  try {
+    return yaml.load(trimmed)
+  } catch {
+    return null
+  }
+}
+
+// Extract operationIds from OpenAPI spec (supports JSON and YAML)
+function extractOperationIds(schemaText) {
+  try {
+    const schema = parseSchema(schemaText)
+    if (!schema) return []
+
+    const operations = []
+
+    if (schema.paths) {
+      for (const [path, methods] of Object.entries(schema.paths)) {
+        for (const [method, operation] of Object.entries(methods)) {
+          if (operation && typeof operation === 'object' && operation.operationId) {
+            operations.push({
+              id: operation.operationId,
+              method: method.toUpperCase(),
+              path: path,
+              summary: operation.summary || ''
+            })
+          }
+        }
+      }
+    }
+
+    return operations
+  } catch {
+    return []
+  }
+}
+
 export default function JsonValidatorDemo({ onValidate }) {
   const [jsonInput, setJsonInput] = useState(EXAMPLE_JSON)
   const [schemaInput, setSchemaInput] = useState(EXAMPLE_SCHEMA)
+  const [operationId, setOperationId] = useState('')
+  const [operations, setOperations] = useState([])
   const [validationResult, setValidationResult] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const fileInputRef = useRef(null)
 
+  // Parse operations when schema changes
+  useEffect(() => {
+    const ops = extractOperationIds(schemaInput)
+    setOperations(ops)
+
+    // Auto-select first operation if available and none selected
+    if (ops.length > 0 && !operationId) {
+      setOperationId(ops[0].id)
+    }
+
+    // Clear selection if current operationId is not in new operations
+    if (operationId && ops.length > 0 && !ops.find(op => op.id === operationId)) {
+      setOperationId(ops[0].id)
+    }
+
+    // Clear if no operations available
+    if (ops.length === 0) {
+      setOperationId('')
+    }
+  }, [schemaInput])
+
   const handleValidate = async () => {
-    if (!jsonInput.trim()) {
-      setError('Please enter JSON to validate')
+    if (!schemaInput.trim()) {
+      setError('Please provide an OpenAPI schema')
       return
     }
 
-    if (!schemaInput.trim()) {
-      setError('Please provide an OpenAPI schema')
+    if (!operationId) {
+      setError('Please select an operation')
+      return
+    }
+
+    if (!jsonInput.trim()) {
+      setError('Please enter JSON to validate')
       return
     }
 
@@ -66,7 +180,7 @@ export default function JsonValidatorDemo({ onValidate }) {
     setValidationResult(null)
 
     try {
-      const result = await onValidate(jsonInput, schemaInput)
+      const result = await onValidate(jsonInput, schemaInput, operationId)
       setValidationResult(result)
     } catch (err) {
       setError(err.message || 'Validation failed')
@@ -92,6 +206,8 @@ export default function JsonValidatorDemo({ onValidate }) {
   const handleClear = () => {
     setJsonInput('')
     setSchemaInput('')
+    setOperationId('')
+    setOperations([])
     setValidationResult(null)
     setError('')
   }
@@ -128,21 +244,7 @@ export default function JsonValidatorDemo({ onValidate }) {
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* JSON Input Panel */}
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-300">
-            JSON to Validate
-          </label>
-          <textarea
-            value={jsonInput}
-            onChange={(e) => setJsonInput(e.target.value)}
-            placeholder="Paste your JSON here..."
-            className="w-full h-48 px-4 py-3 bg-brand-dark border border-white/10 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all resize-none"
-            spellCheck={false}
-          />
-        </div>
-
-        {/* Schema Input Panel */}
+        {/* Schema Input Panel - Now on the left */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <label className="block text-sm font-medium text-slate-300">
@@ -168,11 +270,53 @@ export default function JsonValidatorDemo({ onValidate }) {
           <textarea
             value={schemaInput}
             onChange={(e) => setSchemaInput(e.target.value)}
-            placeholder="Paste your OpenAPI schema here or upload a file..."
+            placeholder="Paste your OpenAPI schema (JSON or YAML) here or upload a file..."
             className="w-full h-48 px-4 py-3 bg-brand-dark border border-white/10 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all resize-none"
             spellCheck={false}
           />
         </div>
+
+        {/* JSON Input Panel - Now on the right */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-slate-300">
+            JSON to Validate
+          </label>
+          <textarea
+            value={jsonInput}
+            onChange={(e) => setJsonInput(e.target.value)}
+            placeholder="Paste your JSON here..."
+            className="w-full h-48 px-4 py-3 bg-brand-dark border border-white/10 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all resize-none"
+            spellCheck={false}
+          />
+        </div>
+      </div>
+
+      {/* Operation ID Dropdown */}
+      <div className="mt-4 space-y-2">
+        <label className="block text-sm font-medium text-slate-300">
+          Operation ID
+        </label>
+        <select
+          value={operationId}
+          onChange={(e) => setOperationId(e.target.value)}
+          disabled={operations.length === 0}
+          className="w-full px-4 py-3 bg-brand-dark border border-white/10 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {operations.length === 0 ? (
+            <option value="">No operations found in schema</option>
+          ) : (
+            operations.map((op) => (
+              <option key={op.id} value={op.id}>
+                {op.method} {op.path} - {op.id}{op.summary ? ` (${op.summary})` : ''}
+              </option>
+            ))
+          )}
+        </select>
+        {operations.length === 0 && schemaInput.trim() && (
+          <p className="text-xs text-yellow-500">
+            Tip: Your OpenAPI spec needs paths with operationId fields to validate against.
+          </p>
+        )}
       </div>
 
       {/* Validation Result */}
@@ -222,7 +366,7 @@ export default function JsonValidatorDemo({ onValidate }) {
       )}
 
       <div className="mt-6 flex justify-center">
-        <Button onClick={handleValidate} disabled={isLoading}>
+        <Button onClick={handleValidate} disabled={isLoading || operations.length === 0}>
           {isLoading ? (
             <>
               <svg className="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">

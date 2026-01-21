@@ -5,7 +5,7 @@ const BACKEND_API_KEY = process.env.BACKEND_API_KEY
 
 export async function POST(request) {
   try {
-    const { json, schema } = await request.json()
+    const { json, schema, operationId } = await request.json()
 
     if (!json) {
       return NextResponse.json(
@@ -17,6 +17,13 @@ export async function POST(request) {
     if (!schema) {
       return NextResponse.json(
         { error: 'OpenAPI schema is required' },
+        { status: 400 }
+      )
+    }
+
+    if (!operationId) {
+      return NextResponse.json(
+        { error: 'Operation ID is required' },
         { status: 400 }
       )
     }
@@ -34,7 +41,8 @@ export async function POST(request) {
       headers,
       body: JSON.stringify({
         open_api_spec: schema,
-        json_string: json
+        json_string: json,
+        operation_id: operationId
       })
     })
 
@@ -47,6 +55,8 @@ export async function POST(request) {
     }
 
     const data = await response.json()
+    console.log('Backend response:', JSON.stringify(data, null, 2))
+
     // Map backend response to frontend expected format
     // Backend returns: { field, error } -> Frontend expects: { path, message }
     const mappedErrors = data.errors?.map(err => ({
@@ -54,8 +64,11 @@ export async function POST(request) {
       message: err.error
     })) || []
 
+    // Explicitly convert to boolean - if is_valid is undefined, treat as invalid
+    const isValid = data.is_valid === true
+
     return NextResponse.json({
-      valid: data.is_valid,
+      valid: isValid,
       errors: mappedErrors
     })
 

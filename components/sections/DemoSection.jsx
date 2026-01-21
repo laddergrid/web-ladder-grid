@@ -27,16 +27,16 @@ export default function DemoSection() {
     return data.fixed
   }
 
-  const handleValidateJson = async (json, schema) => {
+  const handleValidateJson = async (json, schema, operationId) => {
     const response = await fetch('/api/validate-json', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ json, schema })
+      body: JSON.stringify({ json, schema, operationId })
     })
 
     if (!response.ok) {
       const error = await response.json()
-      throw new Error(error.message || 'Validation failed')
+      throw new Error(error.error || 'Validation failed')
     }
 
     return await response.json()
