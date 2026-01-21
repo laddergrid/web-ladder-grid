@@ -31,12 +31,12 @@ export default function Header() {
             <a href="#demo" className="text-slate-300 hover:text-white transition-colors">
               Demo
             </a>
-            <a href="#" className="text-slate-300 hover:text-white transition-colors">
+            {/* <a href="#" className="text-slate-300 hover:text-white transition-colors">
               Docs
             </a>
             <a href="#" className="text-slate-300 hover:text-white transition-colors">
               GitHub
-            </a>
+            </a> */}
             <Button onClick={scrollToWaitlist} size="sm">
               Join Waitlist
             </Button>
