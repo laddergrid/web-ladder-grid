@@ -25,18 +25,12 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-slate-300 hover:text-white transition-colors">
+            <a href="/#features" className="text-slate-300 hover:text-white transition-colors">
               Features
             </a>
-            <a href="#demo" className="text-slate-300 hover:text-white transition-colors">
+            <a href="/#demo" className="text-slate-300 hover:text-white transition-colors">
               Demo
             </a>
-            {/* <a href="#" className="text-slate-300 hover:text-white transition-colors">
-              Docs
-            </a>
-            <a href="#" className="text-slate-300 hover:text-white transition-colors">
-              GitHub
-            </a> */}
             <Button onClick={scrollToWaitlist} size="sm">
               Join Waitlist
             </Button>
@@ -61,17 +55,11 @@ export default function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-white/10">
             <div className="flex flex-col gap-4">
-              <a href="#features" className="text-slate-300 hover:text-white transition-colors">
+              <a href="/#features" className="text-slate-300 hover:text-white transition-colors">
                 Features
               </a>
-              <a href="#demo" className="text-slate-300 hover:text-white transition-colors">
+              <a href="/#demo" className="text-slate-300 hover:text-white transition-colors">
                 Demo
-              </a>
-              <a href="#" className="text-slate-300 hover:text-white transition-colors">
-                Docs
-              </a>
-              <a href="#" className="text-slate-300 hover:text-white transition-colors">
-                GitHub
               </a>
               <Button onClick={scrollToWaitlist} size="sm" className="w-full">
                 Join Waitlist
