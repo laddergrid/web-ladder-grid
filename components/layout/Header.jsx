@@ -1,4 +1,7 @@
+'use client'
+
 import { useState } from 'react'
+import Link from 'next/link'
 import Container from './Container'
 import Button from '../ui/Button'
 
@@ -15,15 +18,18 @@ export default function Header() {
       <Container>
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center">
+          <Link href="/" className="flex items-center">
             <span className="text-2xl font-bold gradient-text">Marshal</span>
             <span className="ml-2 text-sm text-slate-400">by Ladder Grid</span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-slate-300 hover:text-white transition-colors">
               Features
+            </a>
+            <a href="#demo" className="text-slate-300 hover:text-white transition-colors">
+              Demo
             </a>
             <a href="#" className="text-slate-300 hover:text-white transition-colors">
               Docs
@@ -57,6 +63,9 @@ export default function Header() {
             <div className="flex flex-col gap-4">
               <a href="#features" className="text-slate-300 hover:text-white transition-colors">
                 Features
+              </a>
+              <a href="#demo" className="text-slate-300 hover:text-white transition-colors">
+                Demo
               </a>
               <a href="#" className="text-slate-300 hover:text-white transition-colors">
                 Docs

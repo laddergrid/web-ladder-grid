@@ -1,3 +1,5 @@
+'use client'
+
 import Container from '../layout/Container'
 import Button from '../ui/Button'
 import GradientText from '../ui/GradientText'
@@ -5,6 +7,10 @@ import GradientText from '../ui/GradientText'
 export default function Hero() {
   const scrollToWaitlist = () => {
     document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const scrollToDemo = () => {
+    document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
@@ -49,11 +55,11 @@ export default function Hero() {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" onClick={scrollToWaitlist}>
-              Get Early Access
+            <Button size="lg" onClick={scrollToDemo}>
+              Try the Demo
             </Button>
-            <Button size="lg" variant="secondary">
-              View Documentation
+            <Button size="lg" variant="secondary" onClick={scrollToWaitlist}>
+              Get Early Access
             </Button>
           </div>
         </div>

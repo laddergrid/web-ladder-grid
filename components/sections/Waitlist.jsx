@@ -1,10 +1,67 @@
+'use client'
+
+import { useState } from 'react'
 import Container from '../layout/Container'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
-import useWaitlistForm from '../../hooks/useWaitlistForm'
 
 export default function Waitlist() {
-  const { formData, status, errorMessage, handleChange, handleSubmit } = useWaitlistForm()
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    company: '',
+    role: '',
+    useCase: ''
+  })
+  const [status, setStatus] = useState('idle')
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const handleChange = (e) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }))
+  }
+
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    if (!formData.name.trim()) {
+      setErrorMessage('Name is required')
+      return
+    }
+
+    if (!validateEmail(formData.email)) {
+      setErrorMessage('Please enter a valid email')
+      return
+    }
+
+    setStatus('loading')
+    setErrorMessage('')
+
+    try {
+      const response = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Something went wrong')
+      }
+
+      setStatus('success')
+      setFormData({ name: '', email: '', company: '', role: '', useCase: '' })
+    } catch (error) {
+      setStatus('error')
+      setErrorMessage(error.message)
+    }
+  }
 
   return (
     <section id="waitlist" className="py-20">
@@ -26,9 +83,9 @@ export default function Waitlist() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold mb-2">You're on the list!</h3>
+              <h3 className="text-2xl font-bold mb-2">You&apos;re on the list!</h3>
               <p className="text-slate-300">
-                We'll reach out soon with early access details.
+                We&apos;ll reach out soon with early access details.
               </p>
             </div>
           ) : (
