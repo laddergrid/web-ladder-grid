@@ -21,7 +21,7 @@ module.exports = {
       },
       animation: {
         'gradient': 'gradient 8s linear infinite',
-        'fade-in': 'fadeIn 0.6s ease-out',
+        'fade-in': 'fadeIn 0.2s ease-out',
         'slide-up': 'slideUp 0.6s ease-out'
       },
       keyframes: {
