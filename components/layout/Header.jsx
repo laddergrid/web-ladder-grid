@@ -1,16 +1,37 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import Container from './Container'
 import Button from '../ui/Button'
+import { authService } from '@/lib/auth'
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    setIsAuthenticated(authService.isAuthenticated())
+
+    const unsubscribe = authService.onAuthChange(() => {
+      setIsAuthenticated(authService.isAuthenticated())
+    })
+
+    return unsubscribe
+  }, [])
 
   const scrollToWaitlist = () => {
     document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' })
     setMobileMenuOpen(false)
+  }
+
+  const handleLogout = async () => {
+    await authService.logout()
+    setIsAuthenticated(false)
+    setMobileMenuOpen(false)
+    router.push('/login')
   }
 
   return (
@@ -31,9 +52,28 @@ export default function Header() {
             <a href="/#demo" className="text-slate-300 hover:text-white transition-colors">
               Demo
             </a>
-            <Button onClick={scrollToWaitlist} size="sm">
-              Join Waitlist
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <Link href="/dashboard" className="text-slate-300 hover:text-white transition-colors">
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="text-slate-300 hover:text-white transition-colors">
+                  Login
+                </Link>
+                <Button onClick={scrollToWaitlist} size="sm">
+                  Join Waitlist
+                </Button>
+              </>
+            )}
           </nav>
 
           {/* Mobile menu button */}
@@ -61,9 +101,32 @@ export default function Header() {
               <a href="/#demo" className="text-slate-300 hover:text-white transition-colors">
                 Demo
               </a>
-              <Button onClick={scrollToWaitlist} size="sm" className="w-full">
-                Join Waitlist
-              </Button>
+              {isAuthenticated ? (
+                <>
+                  <Link href="/dashboard">
+                    <Button size="sm" variant="secondary" className="w-full">
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button size="sm" variant="secondary" className="w-full">
+                      Login
+                    </Button>
+                  </Link>
+                  <Button onClick={scrollToWaitlist} size="sm" className="w-full">
+                    Join Waitlist
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         )}
