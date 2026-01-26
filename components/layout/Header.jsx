@@ -22,11 +22,6 @@ export default function Header() {
     return unsubscribe
   }, [])
 
-  const scrollToWaitlist = () => {
-    document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' })
-    setMobileMenuOpen(false)
-  }
-
   const handleLogout = async () => {
     await authService.logout()
     setIsAuthenticated(false)
@@ -65,14 +60,11 @@ export default function Header() {
                 </button>
               </>
             ) : (
-              <>
-                <Link href="/login" className="text-slate-300 hover:text-white transition-colors">
+              <Link href="/login">
+                <Button size="sm">
                   Login
-                </Link>
-                <Button onClick={scrollToWaitlist} size="sm">
-                  Join Waitlist
                 </Button>
-              </>
+              </Link>
             )}
           </nav>
 
@@ -116,16 +108,11 @@ export default function Header() {
                   </button>
                 </>
               ) : (
-                <>
-                  <Link href="/login">
-                    <Button size="sm" variant="secondary" className="w-full">
-                      Login
-                    </Button>
-                  </Link>
-                  <Button onClick={scrollToWaitlist} size="sm" className="w-full">
-                    Join Waitlist
+                <Link href="/login">
+                  <Button size="sm" className="w-full">
+                    Login
                   </Button>
-                </>
+                </Link>
               )}
             </div>
           </div>

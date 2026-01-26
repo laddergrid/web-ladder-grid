@@ -11,7 +11,7 @@ export default function Stats() {
     {
       number: '0',
       label: 'Additional LLM Calls',
-      description: 'Zero extra API costs'
+      description: 'Zero extra token costs'
     },
     {
       number: '100%',
