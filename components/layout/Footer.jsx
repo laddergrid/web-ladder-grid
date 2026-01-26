@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import Container from './Container'
 
 export default function Footer() {
@@ -24,9 +25,8 @@ export default function Footer() {
             <ul className="space-y-2 text-slate-400 text-sm">
               <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
               <li><a href="#demo" className="hover:text-white transition-colors">Demo</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">API Reference</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">GitHub</a></li>
+              <li><Link href="/docs/api-reference" className="hover:text-white transition-colors">API Reference</Link></li>
+              <li><a href="https://github.com/laddergrid/marshal-engine" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a></li>
             </ul>
           </div>
 
