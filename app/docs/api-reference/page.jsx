@@ -82,7 +82,7 @@ export default function ApiReferencePage() {
     return (
       <div className="relative group">
         <pre className="bg-brand-surface border border-white/10 rounded-lg p-4 pr-12 overflow-x-auto">
-          <code className="text-sm text-slate-300">{code}</code>
+          <code className="text-xs text-slate-300">{code}</code>
         </pre>
         <button
           onClick={() => copyToClipboard(code, id)}
@@ -139,8 +139,8 @@ export default function ApiReferencePage() {
                     : 'text-slate-400 hover:bg-white/5 hover:text-white'
                 }`}
               >
-                <span className="text-xl">{section.icon}</span>
-                <span className="font-medium">{section.name}</span>
+                <span className="text-sm w-4">{section.icon}</span>
+                <span className="text-sm">{section.name}</span>
               </button>
             ))}
           </nav>
@@ -151,28 +151,28 @@ export default function ApiReferencePage() {
           {selectedSection === 'getting-started' && (
             <div className="space-y-6">
               <div>
-                <h1 className="text-4xl font-bold text-white mb-4">
+                <h1 className="text-2xl font-bold text-white mb-4">
                   <GradientText>API Reference</GradientText>
                 </h1>
-                <p className="text-slate-400 text-lg">
+                <p className="text-slate-400 text-sm">
                   Complete documentation for the Marshal Engine API - JSON validation and repair services
                 </p>
               </div>
 
               <div className="glass-card p-6">
-                <h2 className="text-2xl font-bold text-white mb-4">Base URL</h2>
+                <h2 className="text-md text-white mb-4">Base URL</h2>
                 <div className="bg-brand-surface border border-white/10 rounded-lg p-4">
                   <code className="text-brand-cyan">https://api.laddergrid.com</code>
                 </div>
               </div>
 
               <div className="glass-card p-6">
-                <h2 className="text-2xl font-bold text-white mb-4">Authentication</h2>
+                <h2 className="text-md text-white mb-4">Authentication</h2>
                 <p className="text-slate-400 mb-4">
                   The Marshal Engine API uses Bearer token authentication with API keys.
                 </p>
                 <div className="p-4 bg-brand-surface border border-white/10 rounded-lg">
-                  <h3 className="text-lg font-semibold text-white mb-2">Bearer API Key</h3>
+                  <h3 className="text-sm text-white mb-2">Bearer API Key</h3>
                   <p className="text-sm text-slate-400 mb-2">
                     Include your API key in the Authorization header as a Bearer token for all requests.
                   </p>
@@ -185,7 +185,7 @@ export default function ApiReferencePage() {
               </div>
 
               <div className="glass-card p-6">
-                <h2 className="text-2xl font-bold text-white mb-4">Quick Start</h2>
+                <h2 className="text-md text-white mb-4">Quick Start</h2>
                 <ol className="space-y-3 text-slate-300">
                   <li className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-6 h-6 bg-brand-purple/20 rounded-full flex items-center justify-center text-brand-purple text-sm font-semibold">1</span>
@@ -203,7 +203,7 @@ export default function ApiReferencePage() {
               </div>
 
               <div className="glass-card p-6">
-                <h2 className="text-2xl font-bold text-white mb-4">Example Request</h2>
+                <h2 className="text-md text-white mb-4">Example Request</h2>
                 <CodeBlock
                   id="getting-started-example"
                   code={`curl -X POST https://api.laddergrid.com/validator/validate \\
@@ -222,10 +222,10 @@ export default function ApiReferencePage() {
           {selectedSection !== 'getting-started' && endpoints[selectedSection] && (
             <div className="space-y-6">
               <div>
-                <h1 className="text-4xl font-bold text-white mb-2">
+                <h1 className="text-2xl font-bold text-white mb-2">
                   <GradientText>{sections.find(s => s.id === selectedSection)?.name}</GradientText>
                 </h1>
-                <p className="text-slate-400">
+                <p className="text-slate-400 text-sm">
                   API endpoints for {selectedSection.replace('-', ' ')} operations
                 </p>
               </div>
@@ -238,20 +238,20 @@ export default function ApiReferencePage() {
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-semibold text-white mb-2">{endpoint.summary}</h3>
+                    <h3 className="text-md text-white mb-2">{endpoint.summary}</h3>
                     <p className="text-slate-400 text-sm">{endpoint.description}</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-slate-500">Authentication</span>
-                      <p className="text-white font-medium">{endpoint.auth}</p>
+                      <p className="text-white">{endpoint.auth}</p>
                     </div>
                   </div>
 
                   {endpoint.params && endpoint.params.length > 0 && (
                     <div>
-                      <h4 className="text-lg font-semibold text-white mb-3">Parameters</h4>
+                      <h4 className="text-md text-white mb-3">Parameters</h4>
                       <div className="space-y-2">
                         {endpoint.params.map((param, idx) => (
                           <div key={idx} className="p-3 bg-brand-surface border border-white/10 rounded-lg">
@@ -275,7 +275,7 @@ export default function ApiReferencePage() {
 
                   {endpoint.requestBody && (
                     <div>
-                      <h4 className="text-lg font-semibold text-white mb-3">Request Body</h4>
+                      <h4 className="text-md text-white mb-3">Request Body</h4>
                       <CodeBlock
                         id={`${selectedSection}-${index}-request`}
                         code={JSON.stringify(endpoint.requestBody, null, 2)}
@@ -285,7 +285,7 @@ export default function ApiReferencePage() {
 
                   {endpoint.response && (
                     <div>
-                      <h4 className="text-lg font-semibold text-white mb-3">Response (200 OK)</h4>
+                      <h4 className="text-md text-white mb-3">Response (200 OK)</h4>
                       <CodeBlock
                         id={`${selectedSection}-${index}-response`}
                         code={JSON.stringify(endpoint.response, null, 2)}
@@ -294,7 +294,7 @@ export default function ApiReferencePage() {
                   )}
 
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-3">Example Request</h4>
+                    <h4 className="text-md text-white mb-3">Example Request</h4>
                     <CodeBlock
                       id={`${selectedSection}-${index}-curl`}
                       code={`curl -X ${endpoint.method} https://api.laddergrid.com${endpoint.path} \\

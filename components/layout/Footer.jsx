@@ -23,15 +23,15 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Product</h4>
             <ul className="space-y-2 text-slate-400 text-sm">
-              <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
-              <li><a href="#demo" className="hover:text-white transition-colors">Demo</a></li>
+              <li><a href="/#features" className="hover:text-white transition-colors">Features</a></li>
+              <li><a href="/#demo" className="hover:text-white transition-colors">Demo</a></li>
               <li><Link href="/docs/api-reference" className="hover:text-white transition-colors">API Reference</Link></li>
               <li><a href="https://github.com/laddergrid/marshal-engine" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a></li>
             </ul>
           </div>
 
           {/* Legal */}
-          <div>
+          {/* <div>
             <h4 className="font-semibold mb-4">Company</h4>
             <ul className="space-y-2 text-slate-400 text-sm">
               <li><a href="#" className="hover:text-white transition-colors">About</a></li>
@@ -39,7 +39,7 @@ export default function Footer() {
               <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
             </ul>
-          </div>
+          </div> */}
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/10 text-center text-slate-400 text-sm">
