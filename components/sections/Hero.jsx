@@ -25,14 +25,14 @@ export default function Hero() {
           {/* Badge */}
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse mr-2" />
-            <span className="text-sm">Now in Private Beta</span>
+            <span className="text-sm">Now in Public Beta</span>
           </div>
 
           {/* Headline */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            <GradientText>The Logic Enforcer</GradientText>
+            <GradientText>Fix LLM JSON</GradientText>
             <br />
-            for the Agentic Era
+            outputs
           </h1>
 
           {/* Subheadline */}
