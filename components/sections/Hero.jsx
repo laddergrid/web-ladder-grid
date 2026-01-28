@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+
 import Container from '../layout/Container'
 import Button from '../ui/Button'
 import GradientText from '../ui/GradientText'
@@ -58,9 +60,11 @@ export default function Hero() {
             <Button size="lg" onClick={scrollToDemo}>
               Try the Demo
             </Button>
+            <Link href="/login">
             <Button size="lg" variant="secondary" onClick={scrollToWaitlist}>
               Get Early Access
             </Button>
+            </Link>
           </div>
         </div>
       </Container>
