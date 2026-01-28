@@ -3,7 +3,9 @@
     "allow": [
       "Bash(npm install)",
       "Bash(npm install:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd missing form components for loading spinners\n\nInclude the FixJsonForm and ValidateJsonForm client components that were\nreferenced in the demo pages but not previously committed.\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
