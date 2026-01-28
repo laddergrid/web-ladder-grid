@@ -3,7 +3,7 @@ import yaml from 'js-yaml'
 import Container from '@/components/layout/Container'
 import GradientText from '@/components/ui/GradientText'
 
-const BACKEND_API_URL = process.env.BACKEND_API_URL || 'http://localhost:8080'
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:8080'
 const BACKEND_API_KEY = process.env.BACKEND_API_KEY
 
 // Parse schema text as JSON or YAML
