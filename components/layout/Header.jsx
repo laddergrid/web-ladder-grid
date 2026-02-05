@@ -44,6 +44,9 @@ export default function Header() {
             <a href="/#features" className="text-slate-300 hover:text-white transition-colors">
               Features
             </a>
+            <a href="/docs/api-reference" className="text-slate-300 hover:text-white transition-colors">
+              API Docs
+            </a>
             <a href="/#demo" className="text-slate-300 hover:text-white transition-colors">
               Demo
             </a>
